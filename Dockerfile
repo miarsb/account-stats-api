@@ -14,10 +14,7 @@ COPY __init__.py /api
 
 COPY scores /api/scores
 
-COPY startup.sh /api
-COPY nginx.conf /etc/nginx/sites-available/
 
-RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled
 WORKDIR /api
 
 
