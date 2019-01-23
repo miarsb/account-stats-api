@@ -33,7 +33,10 @@ def get_account(account_id):
             Must provide the valid authorization key as well
             example: /traffic/api/v1/wpengine?auth='test'"""
 
-    return api_helpers.pull_account_traffic(account_id)
+    data = api_helpers.pull_account_traffic(account_id)
+    return jsonify(account=account_id,
+                    account_traffic=data)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
