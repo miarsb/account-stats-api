@@ -9,7 +9,7 @@ def pull_account_traffic(account_name):
                     pass
             Returns:
                 A list of scores, containing the score for each day"""
-    traffic_report = []
+    traffic_report = ''
     dates = generate_dates()
     check = "failed"
     for log_file in dates:
@@ -18,14 +18,14 @@ def pull_account_traffic(account_name):
                     line = line.strip()
                     split_line = line.split(',')
                     if split_line[0] == account_name:
-                        traffic_report.append(split_line[5])
+                        traffic_report += split_line[5]+','
                         check = "passed"
                         break
                     else:
                         check = "failed"
                 if check == "failed":
                     return "Account Not Found"
-    return str(traffic_report)
+    return str(traffic_report)[:-1]
 
 def generate_dates():
     """Generates the dates for the last 30 days
