@@ -10,7 +10,7 @@ build: ## create image
 	docker build -t "$(IMAGE_NAME)" .
 
 run: build ## run and build
-	docker run -it -p 8080:8080 "$(IMAGE_NAME)"
+	docker run -it --env-file ./.env -p 8080:8080 "$(IMAGE_NAME)"
 
 test: ## build and run tests
 	docker build -f Dockerfile -t "$(IMAGE_NAME)" .

@@ -1,6 +1,6 @@
-from flask import Flask, jsonify
-from flask import request, abort
+from flask import Flask, jsonify, request, abort
 from functools import wraps
+import os
 import api_helpers
 
 app = Flask(__name__)
@@ -13,11 +13,9 @@ def require_appkey(view_function):
                 pass through if authorized"""
     @wraps(view_function)
     def decorated_function(*args, **kwargs):
-        key_file = open('key.txt')
-        key = key_file.readline()
-        key_file.close()
+        key = os.environ.get('ACCOUNT_API_SECRET')
         token = request.headers.get('Authorization')
-        if token and token == key.strip():
+        if token and token == key:
             return view_function(*args, **kwargs)
         else:
             abort(401)
