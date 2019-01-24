@@ -1,5 +1,6 @@
 import datetime as DT
 import os
+from os.path import isfile, join
 
 def pull_account_traffic(account_name):
     """Pulls the traffic score for a particular acocunt for each
@@ -12,9 +13,11 @@ def pull_account_traffic(account_name):
                 A list of scores, containing the score for each day"""
     traffic_report = ''
     dates = generate_dates()
+    log_names = format_log_file(format_date(dates))
+    cleanup_old_logs(log_names)
     check = "failed"
-    for log_file in dates:
-        log_to_check = 'scores/account_score_{}'.format(log_file)
+    for log_file in log_names:
+        log_to_check = 'scores/{}'.format(log_file)
         check_for_log(log_to_check)
         with open(log_to_check, "r") as log:
                 for line in log:
@@ -40,6 +43,13 @@ def pull_log(log):
     created_log.write('test,19745,32.908333333333331,3.8591649025069659,1,5\n')
     created_log.write('branden,17335,28.891666666666666,2.9916038650129804,386,10\n')
     created_log.close()
+
+def cleanup_old_logs(dates):
+
+    current_log_files = [f for f in os.listdir('./scores') if isfile(join('./scores', f))]
+    for log in current_log_files:
+        if log not in dates:
+            os.remove('./scores/{}'.format(log))
 
 def generate_dates():
     """Generates the dates for the last 30 days
@@ -68,4 +78,10 @@ def format_date(date):
         return "0{}".format(date)
     else:
         return date
+
+def format_log_file(date_list):
+    log_formatted_names = []
+    for date in date_list:
+        log_formatted_names.append('account_score_{}'.format(date))
+    return log_formatted_names
 
