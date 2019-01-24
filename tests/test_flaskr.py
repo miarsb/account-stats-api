@@ -1,6 +1,7 @@
 import unittest
 from flask import request
 from parameterized import parameterized
+import os
 import api
 
 class MyAppCase(unittest.TestCase):
@@ -16,14 +17,12 @@ class MyAppCase(unittest.TestCase):
 
 		
 	@parameterized.expand([
-		('pull traffic data for test account', '/traffic/api/v1/test', "['5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5']"),
-		('pull traffic data for branden account', '/traffic/api/v1/branden', "['10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10']")
+		
+		('pull traffic data for branden account', '/traffic/api/v1/branden', '{"account":"branden","account_traffic":"10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10"}')
 		])
 	def test_api_return(self, _, api_path, expected_scores):
-		key_file = open('key.txt')
-		key = key_file.readline().strip()
-		key_file.close()
+		key = os.environ.get('ACCOUNT_API_SECRET')
 
 		response = self.app.get(api_path, headers={"Authorization":key})
 		data = response.get_data(as_text=True)
-		self.assertEqual(data, expected_scores)
+		self.assertEqual(data.strip(), expected_scores)

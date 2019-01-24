@@ -14,4 +14,4 @@ run: build ## run and build
 
 test: ## build and run tests
 	docker build -f Dockerfile -t "$(IMAGE_NAME)" .
-	docker run -it -v ${PWD}/tests:/api/tests -p 80:80 "$(IMAGE_NAME)" python -m unittest discover tests/
+	docker run -it --env-file ./.env -v ${PWD}/tests:/api/tests -p 80:80 "$(IMAGE_NAME)" python -m unittest discover tests/
