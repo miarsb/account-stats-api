@@ -32,9 +32,40 @@ make test
 
 Once built, the results of the tests will be outputted. 
 
+# Deploy
 
+Create heroku app
 
+Download and install Heroku CLI - https://devcenter.heroku.com/articles/heroku-cli
 
+Setup authorization enviornmental variable:
 
+```
+heroku config:set ACCOUNT_API_SECRET=<Key>
+```
 
+Initialize repo:
 
+```
+git init
+```
+
+Setup remote:
+
+```
+heroku git:remote -a <app name>
+```
+
+Deploy the app:
+
+```
+git add .
+git commit -am "make it better"
+git push heroku master
+```
+
+Make a request:
+
+```
+curl -H "Authorization: {KEY HERE}" https://<heroku app name>.com/traffic/api/v1/test
+```

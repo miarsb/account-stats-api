@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, abort
 from functools import wraps
 import os
-import api_helpers
+from api_helpers import ReadAccountData
 
 app = Flask(__name__)
 
@@ -31,7 +31,7 @@ def get_account(account_id):
             Must provide the valid authorization key as well
             example: /traffic/api/v1/wpengine?auth='test'"""
 
-    data = api_helpers.pull_account_traffic(account_id)
+    data = ReadAccountData(account_id).account_data
     return jsonify(account=account_id,
                     account_traffic=data)
 
