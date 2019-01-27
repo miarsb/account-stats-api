@@ -2,6 +2,7 @@ import datetime as DT
 import os
 from os.path import isfile, join
 
+
 def pull_account_traffic(account_name):
     """Pulls the traffic score for a particular acocunt for each
             day the generate_dates() method generated
@@ -11,10 +12,8 @@ def pull_account_traffic(account_name):
                     pass
             Returns:
                 A list of scores, containing the score for each day"""
-    traffic_report = ''
-    dates = generate_dates()
-    log_names = format_log_file(format_date(dates))
-    cleanup_old_logs(log_names)
+    log_names = setup()
+    traffic_report = ''    
     check = "failed"
     for log_file in log_names:
         log_to_check = 'scores/{}'.format(log_file)
@@ -33,11 +32,27 @@ def pull_account_traffic(account_name):
                     return "Account Not Found"
     return str(traffic_report)[:-1]
 
+def setup():
+    """Runs through some initial setup steps: 
+        Generates dates for current 30 days
+        Formates dates into log file names
+        Cleans up any files outside the 30 days
+
+        Returns:
+            log files to check in correct format"""
+    dates = generate_dates()
+    log_names = format_log_file(format_date(dates))
+    cleanup_old_logs(log_names)
+    return log_names
+
 def check_for_log(log):
+    """Ensure provided log file exists locally"""
     if not os.path.isfile(log):
         pull_log(log)
 
 def pull_log(log):
+    """Place holder method for now. Ensures we have the logs for the correct dates for the API to have available
+        Should be replaced with a method to pull from the Google bucket if service account is created"""
     created_log = open(log, "w+")
     created_log.write('account_name,requests,rps,avg_response_time,errors_504,score\n')
     created_log.write('test,19745,32.908333333333331,3.8591649025069659,1,5\n')
@@ -45,6 +60,10 @@ def pull_log(log):
     created_log.close()
 
 def cleanup_old_logs(dates):
+    """Takes a date range and removes any logs that fall outside the range
+
+        Args:
+            dates: list of dates to check against"""
 
     current_log_files = [f for f in os.listdir('./scores') if isfile(join('./scores', f))]
     for log in current_log_files:
@@ -80,6 +99,10 @@ def format_date(date):
         return date
 
 def format_log_file(date_list):
+    """Use dates to create a list of names that match the account stat files format
+
+        Args:
+            date_list: list of dates to be converted to file names"""
     log_formatted_names = []
     for date in date_list:
         log_formatted_names.append('account_score_{}'.format(date))
