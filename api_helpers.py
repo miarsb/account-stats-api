@@ -1,6 +1,7 @@
 import datetime as DT
 import os
 from os.path import isfile, join
+from flask import abort
 
 class ReadAccountData:
 
@@ -32,7 +33,7 @@ class ReadAccountData:
                             traffic_report += split_line[5]+','
                             break
                     if traffic_report == '':
-                        return "Account Not Found"
+                        abort(404)
         return str(traffic_report)[:-1]
 
     def generate_dates(self):

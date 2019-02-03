@@ -6,9 +6,9 @@ class TestAccountCheck(unittest.TestCase):
 
 	test_object = ReadAccountData('test')
 
+
+
 	@parameterized.expand([
-		("fake account", test_object.pull_account_data('1111'), 'Account Not Found'),
-		("symbol test", test_object.pull_account_data('!$@#@$'), 'Account Not Found'),
 		("symbol test", test_object.pull_account_data('test'), '5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5'),
 		("symbol test", test_object.pull_account_data('branden'), '10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10'),
 	])
