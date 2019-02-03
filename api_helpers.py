@@ -2,6 +2,7 @@ import datetime as DT
 import os
 from os.path import isfile, join
 from flask import abort
+from google.cloud import storage
 
 class ReadAccountData:
 
@@ -81,13 +82,11 @@ class ReadAccountData:
                 self.pull_log('scores/{}'.format(log))
 
     def pull_log(self, log):
-        """Place holder method for now. Ensures we have the logs for the correct dates for the API to have available
-            Should be replaced with a method to pull from the Google bucket if service account is created"""
-        created_log = open(log, "w+")
-        created_log.write('account_name,requests,rps,avg_response_time,errors_504,score\n')
-        created_log.write('test,19745,32.908333333333331,3.8591649025069659,1,5\n')
-        created_log.write('branden,17335,28.891666666666666,2.9916038650129804,386,10\n')
-        created_log.close()
+        storage_client = storage.Client()
+        bucket_name = 'account-api'
+        bucket = storage_client.get_bucket(bucket_name)
+        blob = bucket.blob('{}'.format(log))
+        blob.download_to_filename('{}'.format(log))
 
     def cleanup_old_logs(self, dates):
         """Takes a date range and removes any logs that fall outside the range
